@@ -1,0 +1,40 @@
+---
+import { render } from "astro:content";
+import Base from "../../layouts/Base.astro";
+import PostCard from "../../components/PostCard.astro";
+import { getCaseStudies, absUrl, fmtDate } from "../../lib/content";
+import site from "../../data/site.json";
+
+export async function getStaticPaths() {
+  const items = await getCaseStudies();
+  return items.map((c) => ({ params: { slug: c.id }, props: { item: c, others: items.filter((o) => o.id !== c.id).slice(0, 3) } }));
+}
+const { item, others } = Astro.props;
+const { Content } = await render(item);
+const jsonLd = [{ "@context": "https://schema.org", "@type": "Article", headline: item.data.title, description: item.data.description, image: absUrl(item.data.cover), datePublished: item.data.date.toISOString(), author: { "@type": "Organization", name: site.name }, about: { "@type": "Organization", name: item.data.client } }];
+---
+<Base title={item.data.title} description={item.data.description} image={item.data.cover} type="article" jsonLd={jsonLd}>
+  <article>
+    <header class="band article-head"><div class="wrap narrow">
+      <nav aria-label="Breadcrumb" class="crumbs"><a href="/">Home</a> <span aria-hidden="true">/</span> <a href="/case-studies/">Case studies</a></nav>
+      <p class="eyebrow">{item.data.client} &middot; {item.data.location}</p>
+      <h1>{item.data.title}</h1>
+      <p class="lead">{item.data.description}</p>
+    </div></header>
+    <div class="wrap narrow">
+      <figure class="article-cover"><img src={item.data.cover} alt={item.data.coverAlt} width="1200" height="800" fetchpriority="high"></figure>
+      {item.data.results.length > 0 && (
+        <section aria-labelledby="results-heading" class="results">
+          <h2 id="results-heading">Results</h2>
+          <dl class="stats">{item.data.results.map((r) => <div class="stat"><dt>{r.label}</dt><dd class="num">{r.value}</dd></div>)}</dl>
+        </section>
+      )}
+      <div class="prose"><Content /></div>
+      <p class="meta">Published <time datetime={item.data.date.toISOString().slice(0, 10)}>{fmtDate(item.data.date)}</time></p>
+    </div>
+  </article>
+  <section class="cta-band"><div class="wrap"><div><h2>Want results like these?</h2><p>Tell us about your cafe, restaurant or office.</p></div><a class="btn" href="/contact/">Start a conversation</a></div></section>
+  {others.length > 0 && (
+    <section><div class="wrap"><h2>More case studies</h2><div class="grid-3">{others.map((c) => <PostCard href={`/case-studies/${c.id}/`} image={c.data.cover} kicker={c.data.location} title={c.data.title} summary={c.data.description} />)}</div></div></section>
+  )}
+</Base>

@@ -1,0 +1,9 @@
+{
+  "name": "Tidewell Coffee",
+  "tagline": "Small-batch coffee roasted on the coast",
+  "url": "https://tidewell-demo.pages.dev",
+  "noindex": true,
+  "locale": "en",
+  "timezone": "America/Los_Angeles",
+  "social": { "instagram": "https://instagram.com/", "facebook": "https://facebook.com/" }
+}

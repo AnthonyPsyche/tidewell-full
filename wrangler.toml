@@ -1,0 +1,8 @@
+name = "tidewell-full"
+compatibility_date = "2026-10-01"
+pages_build_output_dir = "dist"
+
+# Optional: uncomment to rate-limit form posts per IP (create with `wrangler kv namespace create RATE_LIMIT`)
+# [[kv_namespaces]]
+# binding = "RATE_LIMIT"
+# id = "<namespace id>"

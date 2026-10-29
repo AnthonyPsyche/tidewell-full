@@ -1,0 +1,36 @@
+---
+import Base from "../layouts/Base.astro";
+import formsConfig from "../data/forms.json";
+const form = formsConfig.forms.find((f) => f.id === "contact")!;
+const siteKey = import.meta.env.PUBLIC_TURNSTILE_SITEKEY ?? "1x00000000000000000000AA"; // Cloudflare's always-pass test key
+---
+<Base title="Contact" description="Ask about wholesale, subscriptions or events. Send Tidewell Coffee a message and we reply within one business day.">
+  <section class="band page-head"><div class="wrap">
+    <p class="eyebrow">Get in touch</p>
+    <h1>Contact us</h1>
+    <p class="lead">Wholesale, subscriptions, events or just a coffee question: we reply within one business day.</p>
+  </div></section>
+  <section><div class="wrap narrow">
+    <h2 class="sr-only">Contact form</h2>
+    <form class="form" method="post" action={`/api/forms/${form.id}`} data-form={form.id} novalidate>
+      <p class="form-note">Fields marked <span aria-hidden="true">*</span><span class="sr-only">with an asterisk</span> are required.</p>
+      {form.fields.map((f) => (
+        <div class="field">
+          <label for={`f-${f.name}`}>{f.label}{f.required && <span class="req" aria-hidden="true"> *</span>}</label>
+          {f.type === "textarea" && <textarea id={`f-${f.name}`} name={f.name} rows="6" required={f.required} aria-describedby={`e-${f.name}`}></textarea>}
+          {f.type === "select" && <select id={`f-${f.name}`} name={f.name} required={f.required} aria-describedby={`e-${f.name}`}><option value="">Choose one</option>{f.options?.map((o) => <option value={o}>{o}</option>)}</select>}
+          {(f.type === "text" || f.type === "email" || f.type === "tel") && <input id={`f-${f.name}`} name={f.name} type={f.type} required={f.required} autocomplete={f.autocomplete} aria-describedby={`e-${f.name}`}>}
+          <p class="field-error" id={`e-${f.name}`} hidden></p>
+        </div>
+      ))}
+      <div class="hp" aria-hidden="true"><label for="f-hp">Leave this field empty</label><input id="f-hp" name={form.spam.honeypotField} type="text" tabindex="-1" autocomplete="off"></div>
+      <input type="hidden" name="_ts" value="">
+      {form.spam.requireTurnstile && <div class="cf-turnstile" data-sitekey={siteKey}></div>}
+      <button class="btn" type="submit">{form.submitLabel}</button>
+      <p class="form-status" role="status" aria-live="polite" hidden></p>
+    </form>
+    <p class="notes">Prefer email? Write to <a href="mailto:hello@example.com">hello@example.com</a> (demo address).</p>
+  </div></section>
+  <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+  <script src="/js/forms.js" defer></script>
+</Base>

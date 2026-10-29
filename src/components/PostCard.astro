@@ -1,0 +1,13 @@
+---
+import { fmtDate, slugify } from "../lib/content";
+const { href, image, imageAlt, kicker, title, date, summary } = Astro.props;
+---
+<article class="card post-card reveal">
+  <a class="post-card-media" href={href} tabindex="-1" aria-hidden="true"><img src={image} alt="" width="1200" height="800" loading="lazy" decoding="async"></a>
+  <div class="post-card-body">
+    {kicker && <p class="tag">{kicker}</p>}
+    <h3><a href={href}>{title}</a></h3>
+    <p class="notes">{summary}</p>
+    {date && <p class="meta"><time datetime={date.toISOString().slice(0, 10)}>{fmtDate(date)}</time></p>}
+  </div>
+</article>

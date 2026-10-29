@@ -1,0 +1,235 @@
+# Decap CMS configuration for Tidewell Coffee (Git-based: saving writes files to the repo and the site rebuilds).
+# Login: GitHub OAuth through /api/auth and /api/callback (Cloudflare Pages Functions). Local editing: `npm run cms` + `npm run dev`.
+backend:
+  name: github
+  repo: AnthonyPsyche/tidewell-full      # change per project: owner/repo
+  branch: main
+  base_url: https://tidewell-demo.pages.dev   # change to the live site origin that hosts /api/auth
+  auth_endpoint: api/auth
+  commit_messages:
+    create: "Add {{collection}} “{{slug}}”"
+    update: "Update {{collection}} “{{slug}}”"
+    delete: "Delete {{collection}} “{{slug}}”"
+    uploadMedia: "Upload “{{path}}”"
+    deleteMedia: "Delete “{{path}}”"
+    openAuthoring: "{{message}}"
+
+local_backend: true                      # only takes effect on localhost, when `npm run cms` is running
+
+# Draft -> In review -> Ready -> Published. Each draft is a pull request; publishing merges it and the site redeploys.
+publish_mode: editorial_workflow
+media_folder: public/uploads
+public_folder: /uploads
+site_url: https://tidewell-demo.pages.dev
+display_url: https://tidewell-demo.pages.dev
+logo_url: /img/logo-primary.svg
+locale: en
+
+collections:
+  - name: blog
+    editor:
+      preview: false
+    label: Journal posts
+    label_singular: Journal post
+    folder: src/content/blog
+    create: true
+    extension: md
+    format: frontmatter
+    slug: "{{slug}}"
+    summary: "{{title}} ({{category}}, {{pubDate}})"
+    sortable_fields: [pubDate, title, category]
+    view_filters:
+      - { label: Brewing, field: category, pattern: Brewing }
+      - { label: Roasting, field: category, pattern: Roasting }
+      - { label: Sourcing, field: category, pattern: Sourcing }
+    fields:
+      - { label: Title, name: title, widget: string, hint: "The headline. Keep it under 70 characters.", pattern: ['^.{1,70}$', "Use 70 characters or fewer"] }
+      - { label: Search description, name: description, widget: text, hint: "Shown under the title in Google results and when shared. 50 to 170 characters.", pattern: ['^[\s\S]{50,170}$', "Use between 50 and 170 characters"] }
+      - { label: Publish date, name: pubDate, widget: datetime, date_format: "YYYY-MM-DD", time_format: false, format: "YYYY-MM-DD", picker_utc: false, hint: "Posts dated in the future go live automatically after the nightly rebuild." }
+      - { label: Category, name: category, widget: select, options: [Brewing, Roasting, Sourcing] }
+      - { label: Author, name: author, widget: relation, collection: team, search_fields: [name], value_field: "{{slug}}", display_fields: [name] }
+      - { label: Cover image, name: cover, widget: image, hint: "Landscape photo, ideally 1200 x 800 pixels (3:2)." }
+      - { label: Cover image description, name: coverAlt, widget: string, hint: "Describe the photo for people using screen readers." }
+      - { label: Hide this post (draft), name: draft, widget: boolean, default: false, required: false }
+      - label: FAQs
+        name: faqs
+        widget: list
+        required: false
+        summary: "{{fields.question}}"
+        hint: "Optional. Each question becomes an expandable answer under the post and is added to the page's FAQ markup for search."
+        fields:
+          - { label: Question, name: question, widget: string }
+          - { label: Answer, name: answer, widget: text }
+      - { label: Body, name: body, widget: markdown, hint: "Use Heading 2 and Heading 3 for sections. The title is already the page's main heading." }
+
+  - name: case_studies
+    editor:
+      preview: false
+    label: Case studies
+    label_singular: Case study
+    folder: src/content/case-studies
+    create: true
+    extension: md
+    format: frontmatter
+    slug: "{{slug}}"
+    summary: "{{title}} ({{client}})"
+    fields:
+      - { label: Title, name: title, widget: string, pattern: ['^.{1,70}$', "Use 70 characters or fewer"] }
+      - { label: Search description, name: description, widget: text, pattern: ['^[\s\S]{50,170}$', "Use between 50 and 170 characters"] }
+      - { label: Client name, name: client, widget: string }
+      - { label: Location, name: location, widget: string }
+      - { label: Date, name: date, widget: datetime, date_format: "YYYY-MM-DD", time_format: false, format: "YYYY-MM-DD", picker_utc: false }
+      - { label: Cover image, name: cover, widget: image }
+      - { label: Cover image description, name: coverAlt, widget: string }
+      - label: Results
+        name: results
+        widget: list
+        required: false
+        summary: "{{fields.value}} {{fields.label}}"
+        fields:
+          - { label: Number, name: value, widget: string, hint: "For example 31% or 2x" }
+          - { label: What it measures, name: label, widget: string }
+      - { label: Hide this case study (draft), name: draft, widget: boolean, default: false, required: false }
+      - { label: Body, name: body, widget: markdown }
+
+  - name: team
+    editor:
+      preview: false
+    label: Team
+    label_singular: Team member
+    folder: src/content/team
+    create: true
+    extension: md
+    format: frontmatter
+    slug: "{{slug}}"
+    summary: "{{order}}. {{name}} ({{role}})"
+    sortable_fields: [order, name]
+    fields:
+      - { label: Name, name: name, widget: string }
+      - { label: Role, name: role, widget: string }
+      - { label: Photo, name: photo, widget: image, hint: "Square headshot, at least 400 x 400 pixels." }
+      - { label: Photo description, name: photoAlt, widget: string, hint: "For example: Portrait of Mara smiling in the roastery." }
+      - { label: Display order, name: order, widget: number, value_type: int, min: 1, default: 100, hint: "1 appears first. Change the numbers to reorder the page." }
+      - { label: Hide this person (draft), name: draft, widget: boolean, default: false, required: false }
+      - { label: Bio, name: body, widget: markdown, buttons: [bold, italic, link], editor_components: [] }
+
+  - name: events
+    editor:
+      preview: false
+    label: Events
+    label_singular: Event
+    folder: src/content/events
+    create: true
+    extension: md
+    format: frontmatter
+    slug: "{{slug}}"
+    summary: "{{start}}  {{title}}"
+    sortable_fields: [start, title]
+    fields:
+      - { label: Title, name: title, widget: string, pattern: ['^.{1,70}$', "Use 70 characters or fewer"] }
+      - { label: Short description, name: description, widget: text, pattern: ['^[\s\S]{30,200}$', "Use between 30 and 200 characters"] }
+      - { label: Starts, name: start, widget: datetime, date_format: "YYYY-MM-DD", time_format: "HH:mm", format: "YYYY-MM-DDTHH:mm", picker_utc: false, hint: "Local time at the venue." }
+      - { label: Ends, name: end, widget: datetime, date_format: "YYYY-MM-DD", time_format: "HH:mm", format: "YYYY-MM-DDTHH:mm", picker_utc: false, required: false }
+      - { label: Venue, name: location, widget: string }
+      - { label: Address, name: address, widget: string, required: false }
+      - { label: Cost, name: cost, widget: string, default: Free, hint: "Free, or an amount such as $25." }
+      - { label: Registration link, name: registerUrl, widget: string, required: false, hint: "Optional. Leave empty to send people to the contact form." }
+      - { label: Hide this event (draft), name: draft, widget: boolean, default: false, required: false }
+      - { label: Details, name: body, widget: markdown }
+
+  - name: settings
+    editor:
+      preview: false
+    label: Settings
+    files:
+      - label: Contact forms
+        name: forms
+        file: src/data/forms.json
+        format: json
+        description: "What each form asks, where visitors land afterwards, who is emailed, and where submissions go."
+        fields:
+          - label: Forms
+            name: forms
+            widget: list
+            summary: "{{fields.name}}"
+            fields:
+              - { label: Form ID, name: id, widget: string, hint: "Used in the web address (/api/forms/contact). Do not change after launch." }
+              - { label: Form name, name: name, widget: string }
+              - { label: Button label, name: submitLabel, widget: string, default: Send }
+              - label: Fields
+                name: fields
+                widget: list
+                summary: "{{fields.label}} ({{fields.type}})"
+                fields:
+                  - { label: Field ID, name: name, widget: string, hint: "Lowercase letters, no spaces. Used for email subject placeholders such as {{name}}." }
+                  - { label: Label, name: label, widget: string }
+                  - { label: Type, name: type, widget: select, options: [text, email, tel, textarea, select] }
+                  - { label: Required, name: required, widget: boolean, default: false }
+                  - { label: Autocomplete hint, name: autocomplete, widget: string, required: false }
+                  - { label: Choices (for dropdowns), name: options, widget: list, required: false }
+              - label: After submitting
+                name: success
+                widget: object
+                fields:
+                  - { label: What happens, name: type, widget: select, options: [{ label: Go to a confirmation page, value: redirect }, { label: Show a message on the same page, value: message }] }
+                  - { label: Confirmation page address, name: redirect, widget: string, required: false, hint: "For example /thank-you/" }
+                  - { label: Message, name: message, widget: text }
+              - label: Email notification
+                name: notify
+                widget: object
+                fields:
+                  - { label: Send a notification email, name: enabled, widget: boolean, default: true }
+                  - { label: Send to, name: to, widget: list, hint: "One email address per line." }
+                  - { label: Subject, name: subject, widget: string, hint: "Placeholders in double curly braces insert answers, for example {{topic}}." }
+                  - { label: Reply-to field, name: replyToField, widget: string, hint: "The Field ID that holds the visitor's email." }
+              - label: Auto-reply to the visitor
+                name: autoresponder
+                widget: object
+                fields:
+                  - { label: Send an auto-reply, name: enabled, widget: boolean, default: false }
+                  - { label: Subject, name: subject, widget: string }
+                  - { label: Message, name: body, widget: text }
+              - label: Marketing platform (CRM)
+                name: crm
+                widget: object
+                fields:
+                  - { label: Platform, name: provider, widget: select, options: [none, mailchimp, hubspot, activecampaign, constantcontact, klaviyo], default: none }
+                  - { label: List or audience ID, name: listId, widget: string, required: false }
+                  - { label: Tags, name: tags, widget: list, required: false }
+                  - label: Field mapping
+                    name: fieldMap
+                    widget: list
+                    required: false
+                    summary: "{{fields.formField}} to {{fields.crmField}}"
+                    fields:
+                      - { label: Form field ID, name: formField, widget: string }
+                      - { label: Platform field name, name: crmField, widget: string }
+              - label: Webhook (Zapier, Make, Slack)
+                name: webhook
+                widget: object
+                fields:
+                  - { label: Webhook address, name: url, widget: string, required: false }
+              - label: Spam protection
+                name: spam
+                widget: object
+                fields:
+                  - { label: Hidden trap field name, name: honeypotField, widget: string }
+                  - { label: Minimum seconds to fill in, name: minSecondsToSubmit, widget: number, value_type: int, default: 3 }
+                  - { label: Require the Cloudflare Turnstile check, name: requireTurnstile, widget: boolean, default: true }
+      - label: Site settings
+        name: site
+        file: src/data/site.json
+        format: json
+        fields:
+          - { label: Site name, name: name, widget: string }
+          - { label: Tagline, name: tagline, widget: string }
+          - { label: Site address, name: url, widget: string }
+          - { label: Hide from search engines (noindex), name: noindex, widget: boolean, hint: "Turn OFF only at launch. While on, every page tells Google not to list it." }
+          - { label: Language code, name: locale, widget: string }
+          - { label: Time zone, name: timezone, widget: string, hint: "For example America/Los_Angeles. Used to decide when an event has passed." }
+          - label: Social links
+            name: social
+            widget: object
+            fields:
+              - { label: Instagram, name: instagram, widget: string, required: false }
+              - { label: Facebook, name: facebook, widget: string, required: false }

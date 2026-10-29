@@ -1,0 +1,25 @@
+---
+import Base from "../layouts/Base.astro";
+import { getTeam } from "../lib/content";
+const members = await getTeam();
+---
+<Base title="Team" description="Meet the roasters, buyers and baristas behind Tidewell Coffee: the people who source, roast and ship every bag.">
+  <section class="band page-head"><div class="wrap">
+    <p class="eyebrow">The people behind the roast</p>
+    <h1>Meet the team</h1>
+    <p class="lead">Small team, long days, very good coffee.</p>
+  </div></section>
+  <section><div class="wrap">
+    <h2 class="sr-only">Team members</h2>
+    <ul class="team-grid">
+      {members.map((m) => (
+        <li class="team-card reveal">
+          <img src={m.data.photo} alt={m.data.photoAlt} width="400" height="400" loading="lazy" decoding="async">
+          <h3>{m.data.name}</h3>
+          <p class="tag">{m.data.role}</p>
+          <div class="notes" set:html={m.rendered?.html ?? ""} />
+        </li>
+      ))}
+    </ul>
+  </div></section>
+</Base>

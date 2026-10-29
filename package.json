@@ -1,0 +1,25 @@
+{
+  "name": "tidewell-full",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node scripts/copy-cms.mjs && astro dev",
+    "build": "node scripts/copy-cms.mjs && astro build",
+    "preview": "wrangler pages dev dist --port 8788",
+    "cms": "decap-server",
+    "check": "node tools/check.mjs",
+    "a11y": "node tools/a11y.mjs",
+    "shots": "node tools/shots.mjs",
+    "verify": "npm run build && node tools/check.mjs && node tools/a11y.mjs"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.4",
+    "astro": "^7.4.4"
+  },
+  "devDependencies": {
+    "axe-core": "^4.14.0",
+    "decap-cms": "^3.17.3",
+    "decap-server": "^3.11.6",
+    "wrangler": "^4.156.0"
+  }
+}

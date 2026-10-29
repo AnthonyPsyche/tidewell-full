@@ -1,0 +1,55 @@
+---
+import Base from "../../layouts/Base.astro";
+import { getEvents, isUpcoming, monthGrid, fmtEventDate, fmtEventTime, ymd, todayInSiteTz } from "../../lib/content";
+const all = await getEvents();
+const upcoming = all.filter(isUpcoming);
+const past = all.filter((e) => !isUpcoming(e)).reverse();
+const [ty, tm] = todayInSiteTz().split("-").map(Number);
+const months = [0, 1, 2].map((i) => { const d = new Date(Date.UTC(ty, tm - 1 + i, 1)); return monthGrid(d.getUTCFullYear(), d.getUTCMonth() + 1, all); });
+const dows = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+const jsonLd = upcoming.map((e) => ({ "@context": "https://schema.org", "@type": "Event", name: e.data.title, startDate: e.data.start, endDate: e.data.end ?? e.data.start, eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode", location: { "@type": "Place", name: e.data.location, address: e.data.address }, description: e.data.description }));
+---
+<Base title="Events" description="Tastings, cuppings and brewing classes at the Tidewell roastery. See what's coming up and add events to your calendar." jsonLd={jsonLd}>
+  <section class="band page-head"><div class="wrap">
+    <p class="eyebrow">Come say hello</p>
+    <h1>Events</h1>
+    <p class="lead">Tastings, cuppings and brewing classes at the roastery.</p>
+    <p><a class="btn btn-secondary" href="/events/calendar.ics">Subscribe in your calendar</a></p>
+  </div></section>
+  <section><div class="wrap">
+    <h2>Upcoming events</h2>
+    {upcoming.length === 0 && <p>No events are scheduled right now. Check back soon.</p>}
+    <ul class="event-list">
+      {upcoming.map((e) => (
+        <li class="event-item reveal">
+          <div class="event-date" aria-hidden="true"><span class="m">{new Date(ymd(e.data.start) + "T00:00:00Z").toLocaleDateString("en-US", { month: "short", timeZone: "UTC" })}</span><span class="d">{ymd(e.data.start).slice(8)}</span></div>
+          <div>
+            <h3><a href={`/events/${e.id}/`}>{e.data.title}</a></h3>
+            <p class="meta">{fmtEventDate(e.data.start)}, {fmtEventTime(e.data.start)}{e.data.end ? ` to ${fmtEventTime(e.data.end)}` : ""} &middot; {e.data.location} &middot; {e.data.cost}</p>
+            <p class="notes">{e.data.description}</p>
+          </div>
+        </li>
+      ))}
+    </ul>
+  </div></section>
+  <section class="band"><div class="wrap">
+    <h2>Calendar</h2>
+    <div class="cal-months">
+      {months.map((mo) => (
+        <table class="cal">
+          <caption>{mo.label}</caption>
+          <thead><tr>{dows.map((d) => <th scope="col"><abbr title={d}>{d.slice(0, 3)}</abbr></th>)}</tr></thead>
+          <tbody>
+            {mo.weeks.map((w) => <tr>{w.map((c) => c ? <td class={c.events.length ? "has-event" : ""}><span class="dn">{c.day}</span>{c.events.map((e) => <a class="cal-dot" href={`/events/${e.id}/`} title={e.data.title}><span class="sr-only">{e.data.title}</span></a>)}</td> : <td class="pad"></td>)}</tr>)}
+          </tbody>
+        </table>
+      ))}
+    </div>
+  </div></section>
+  {past.length > 0 && (
+    <section><div class="wrap">
+      <h2>Past events</h2>
+      <ul class="plain-list">{past.map((e) => <li><a href={`/events/${e.id}/`}>{e.data.title}</a> <span class="meta">{fmtEventDate(e.data.start)}</span></li>)}</ul>
+    </div></section>
+  )}
+</Base>

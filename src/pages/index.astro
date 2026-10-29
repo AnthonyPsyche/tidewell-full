@@ -1,0 +1,135 @@
+---
+import Base from "../layouts/Base.astro";
+import PostCard from "../components/PostCard.astro";
+import site from "../data/site.json";
+import { getPosts, getEvents, isUpcoming, fmtEventDate, fmtEventTime, ymd } from "../lib/content";
+const posts = await getPosts();
+const upcoming = (await getEvents()).filter(isUpcoming);
+---
+<Base title={site.name} description="Single-origin coffee roasted twice a week on the coast and shipped within a day. Explore the journal, meet the team and join a tasting.">
+<section class="hero-a">
+  <div class="wrap">
+    <div class="reveal">
+      <p class="eyebrow">Small-batch coffee roasters</p>
+      <h1>Roasted where the tide turns.</h1>
+      <p class="lead">Single-origin beans, roasted twice a week on the coast and shipped within a day. Coffee that tastes like it was made this morning, because it was.</p>
+      <div class="btn-row"><a class="btn" href="/events/">Join a tasting</a><a class="btn btn-secondary" href="/journal/">Read the journal</a></div>
+      <ul class="trust">
+        <li><svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M4 10.5l4 4 8-9" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Roasted twice a week</li>
+        <li><svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M4 10.5l4 4 8-9" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Ships within 24 hours</li>
+        <li><svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M4 10.5l4 4 8-9" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Free shipping over $35</li>
+      </ul>
+    </div>
+    <div class="hero-art reveal" style="--d:.15s">
+      <div class="arch"><img class="ph" src="/img/photos/scoop-700.jpg" srcset="/img/photos/scoop-700.jpg 466w, /img/photos/scoop.jpg 1400w" sizes="(min-width: 56rem) 28rem, 90vw" width="1400" height="2100" alt="A roaster's hand checking freshly roasted beans in a cooling tray" fetchpriority="high"></div>
+      <div class="badge">
+        <svg class="spin" viewBox="0 0 120 120" aria-hidden="true" focusable="false"><defs><path id="circ" d="M60,60 m-44,0 a44,44 0 1,1 88,0 a44,44 0 1,1 -88,0"/></defs><text font-family="system-ui,sans-serif" font-size="9.5" font-weight="700" fill="currentColor"><textPath href="#circ" textLength="272" lengthAdjust="spacing">SMALL BATCH &#8226; ROASTED TWICE A WEEK &#8226;</textPath></text></svg>
+        <svg class="mark" viewBox="0 0 44 44" aria-hidden="true" focusable="false"><path d="M6 25c4-5 8-5 12 0s8 5 12 0 6-4 10-2" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><path d="M6 17c4-5 8-5 12 0s8 5 12 0 6-4 10-2" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" opacity=".55"/></svg>
+      </div>
+    </div>
+  </div>
+</section>
+<svg class="wave-div" viewBox="0 0 1440 80" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path d="M0 40c120 30 240 30 360 0s240-30 360 0 240 30 360 0 240-30 360 0v40H0z" fill="#fffdf8"/></svg>
+
+<section id="roasts" class="roasts">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <p class="eyebrow">This week's roasts</p>
+      <h2>Three coffees worth getting up for</h2>
+      <p class="lead">Each lot is roasted to order and dated on the bag, so you always know how fresh it is.</p>
+    </div>
+    <div class="grid-3">
+      <article class="card bag-card reveal">
+        <svg class="bag" viewBox="0 0 120 150" aria-hidden="true" focusable="false"><path d="M22 20h76l8 14v100a8 8 0 0 1-8 8H22a8 8 0 0 1-8-8V34z" fill="#2f7f86"/><path d="M22 20h76l8 14H14z" fill="#12303d" opacity=".25"/><rect x="30" y="60" width="60" height="44" rx="6" fill="#f4ead8"/><path d="M38 86c5-6 9-6 14 0s9 6 14 0 7-4 12-2" fill="none" stroke="#12303d" stroke-width="3" stroke-linecap="round"/><rect x="38" y="70" width="44" height="4" rx="2" fill="#12303d"/></svg>
+        <span class="tag">Light roast</span>
+        <h3>Harbor Light</h3>
+        <p class="notes">Citrus, honey and jasmine. Bright and clean, built for slow pour-overs.</p>
+        <a class="card-link" href="/contact/">Ask about this roast<span class="sr-only"> for Harbor Light</span></a>
+      </article>
+      <article class="card bag-card reveal" style="--d:.1s">
+        <svg class="bag" viewBox="0 0 120 150" aria-hidden="true" focusable="false"><path d="M22 20h76l8 14v100a8 8 0 0 1-8 8H22a8 8 0 0 1-8-8V34z" fill="#e0733a"/><path d="M22 20h76l8 14H14z" fill="#12303d" opacity=".25"/><rect x="30" y="60" width="60" height="44" rx="6" fill="#f4ead8"/><path d="M38 86c5-6 9-6 14 0s9 6 14 0 7-4 12-2" fill="none" stroke="#12303d" stroke-width="3" stroke-linecap="round"/><rect x="38" y="70" width="44" height="4" rx="2" fill="#12303d"/></svg>
+        <span class="tag">Medium roast</span>
+        <h3>Driftwood</h3>
+        <p class="notes">Hazelnut, caramel and baked apple. Balanced and easy, our everyday coffee.</p>
+        <a class="card-link" href="/contact/">Ask about this roast<span class="sr-only"> for Driftwood</span></a>
+      </article>
+      <article class="card bag-card reveal" style="--d:.2s">
+        <svg class="bag" viewBox="0 0 120 150" aria-hidden="true" focusable="false"><path d="M22 20h76l8 14v100a8 8 0 0 1-8 8H22a8 8 0 0 1-8-8V34z" fill="#12303d"/><path d="M22 20h76l8 14H14z" fill="#000" opacity=".25"/><rect x="30" y="60" width="60" height="44" rx="6" fill="#f4ead8"/><path d="M38 86c5-6 9-6 14 0s9 6 14 0 7-4 12-2" fill="none" stroke="#12303d" stroke-width="3" stroke-linecap="round"/><rect x="38" y="70" width="44" height="4" rx="2" fill="#12303d"/></svg>
+        <span class="tag">Dark roast</span>
+        <h3>Night Tide</h3>
+        <p class="notes">Dark chocolate, toasted almond and molasses. Smooth and deep for espresso and milk.</p>
+        <a class="card-link" href="/contact/">Ask about this roast<span class="sr-only"> for Night Tide</span></a>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section id="process" class="band">
+  <div class="wrap split">
+    <div class="split-media reveal">
+      <div class="frame arch"><img class="ph" src="/img/photos/pourover-700.jpg" srcset="/img/photos/pourover-700.jpg 466w, /img/photos/pourover.jpg 1400w" sizes="(min-width: 56rem) 32rem, 90vw" width="1400" height="2100" alt="A Chemex brewer with a wooden collar filled with fresh coffee" loading="lazy" decoding="async"></div>
+    </div>
+    <div>
+      <div class="section-head reveal">
+        <p class="eyebrow">From bean to door</p>
+        <h2>Fresh is a process, not a promise</h2>
+      </div>
+      <ol class="steps">
+        <li class="reveal">
+          <span class="icon-ring"><svg class="draw" width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><ellipse cx="14" cy="14" rx="7" ry="10" transform="rotate(35 14 14)"/><path d="M9 7c4 3 6 6 10 14"/></svg></span>
+          <div><h3>Sourced</h3><p>Small farms we know by name, bought at fair prices in traceable lots.</p></div>
+        </li>
+        <li class="reveal" style="--d:.1s">
+          <span class="icon-ring"><svg class="draw" width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M14 3c1 5 7 7 7 14a7 7 0 0 1-14 0c0-3 2-4 3-6 1 2 2 3 3 3 1-3 0-7 1-11z"/></svg></span>
+          <div><h3>Roasted</h3><p>Twice a week in small batches, profiled by hand and cupped before it ships.</p></div>
+        </li>
+        <li class="reveal" style="--d:.2s">
+          <span class="icon-ring"><svg class="draw" width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 9l10-5 10 5v11l-10 5-10-5z"/><path d="M4 9l10 5 10-5M14 14v11"/></svg></span>
+          <div><h3>Shipped</h3><p>Out the door within a day, with a brewing guide and the roast date on the bag.</p></div>
+        </li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+
+<section>
+  <div class="wrap">
+    <div class="section-head reveal">
+      <p class="eyebrow">From the journal</p>
+      <h2>Fresh reading</h2>
+    </div>
+    <div class="grid-3">
+      {posts.slice(0, 3).map((p) => <PostCard href={`/journal/${p.id}/`} image={p.data.cover} kicker={p.data.category} title={p.data.title} date={p.data.pubDate} summary={p.data.description} />)}
+    </div>
+    <p class="more"><a class="btn btn-secondary" href="/journal/">All journal posts</a></p>
+  </div>
+</section>
+
+{upcoming.length > 0 && (
+<section class="band">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <p class="eyebrow">Come say hello</p>
+      <h2>Upcoming events</h2>
+    </div>
+    <ul class="event-list">
+      {upcoming.slice(0, 2).map((e) => (
+        <li class="event-item reveal">
+          <div class="event-date" aria-hidden="true"><span class="m">{new Date(ymd(e.data.start) + "T00:00:00Z").toLocaleDateString("en-US", { month: "short", timeZone: "UTC" })}</span><span class="d">{ymd(e.data.start).slice(8)}</span></div>
+          <div><h3><a href={`/events/${e.id}/`}>{e.data.title}</a></h3><p class="meta">{fmtEventDate(e.data.start)}, {fmtEventTime(e.data.start)} &middot; {e.data.location}</p></div>
+        </li>
+      ))}
+    </ul>
+    <p class="more"><a class="btn btn-secondary" href="/events/">See all events</a></p>
+  </div>
+</section>
+)}
+
+<section class="cta-band">
+  <div class="wrap">
+    <div class="reveal"><h2>Fresh to your door every two weeks.</h2><p>Skip, pause or cancel any time.</p></div>
+    <a class="btn" href="/contact/">Ask about subscriptions</a>
+  </div>
+</section>
+</Base>

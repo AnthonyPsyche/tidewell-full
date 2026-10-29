@@ -1,0 +1,38 @@
+---
+import { render } from "astro:content";
+import Base from "../../layouts/Base.astro";
+import { getEvents, isUpcoming, fmtEventDate, fmtEventTime, absUrl } from "../../lib/content";
+
+export async function getStaticPaths() {
+  const events = await getEvents();
+  return events.map((e) => ({ params: { slug: e.id }, props: { event: e } }));
+}
+const { event } = Astro.props;
+const { Content } = await render(event);
+const d = event.data;
+const upcoming = isUpcoming(event);
+const jsonLd = [{ "@context": "https://schema.org", "@type": "Event", name: d.title, startDate: d.start, endDate: d.end ?? d.start, eventStatus: "https://schema.org/EventScheduled", eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode", location: { "@type": "Place", name: d.location, address: d.address }, description: d.description, offers: { "@type": "Offer", price: d.cost.toLowerCase() === "free" ? "0" : d.cost.replace(/[^0-9.]/g, "") || "0", priceCurrency: "USD", url: absUrl(`/events/${event.id}/`) } }];
+---
+<Base title={d.title} description={d.description} type="article" jsonLd={jsonLd}>
+  <article>
+    <header class="band article-head"><div class="wrap narrow">
+      <nav aria-label="Breadcrumb" class="crumbs"><a href="/">Home</a> <span aria-hidden="true">/</span> <a href="/events/">Events</a></nav>
+      <h1>{d.title}</h1>
+      <p class="lead">{d.description}</p>
+    </div></header>
+    <div class="wrap narrow">
+      <dl class="event-facts">
+        <div><dt>When</dt><dd>{fmtEventDate(d.start)}<br>{fmtEventTime(d.start)}{d.end ? ` to ${fmtEventTime(d.end)}` : ""}</dd></div>
+        <div><dt>Where</dt><dd>{d.location}{d.address && <><br>{d.address}</>}</dd></div>
+        <div><dt>Cost</dt><dd>{d.cost}</dd></div>
+      </dl>
+      <p class="btn-row">
+        {upcoming && d.registerUrl && <a class="btn" href={d.registerUrl}>Register</a>}
+        {upcoming && !d.registerUrl && <a class="btn" href="/contact/">Ask about this event</a>}
+        <a class="btn btn-secondary" href={`/events/${event.id}.ics`}>Add to calendar</a>
+      </p>
+      {!upcoming && <p class="notice" role="note">This event has passed. See what's <a href="/events/">coming up</a>.</p>}
+      <div class="prose"><Content /></div>
+    </div>
+  </article>
+</Base>

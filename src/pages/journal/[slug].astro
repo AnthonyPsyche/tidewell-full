@@ -1,0 +1,52 @@
+---
+import { getEntry, render } from "astro:content";
+import Base from "../../layouts/Base.astro";
+import PostCard from "../../components/PostCard.astro";
+import site from "../../data/site.json";
+import { getPosts, fmtDate, readingTime, slugify, absUrl } from "../../lib/content";
+
+export async function getStaticPaths() {
+  const posts = await getPosts();
+  return posts.map((post) => ({ params: { slug: post.id }, props: { post, related: posts.filter((p) => p.id !== post.id && p.data.category === post.data.category).slice(0, 3) } }));
+}
+const { post, related } = Astro.props;
+const { Content } = await render(post);
+const author = await getEntry(post.data.author);
+const url = absUrl(`/journal/${post.id}/`);
+const faqs = post.data.faqs;
+const jsonLd: object[] = [
+  { "@context": "https://schema.org", "@type": "BlogPosting", headline: post.data.title, description: post.data.description, image: absUrl(post.data.cover), datePublished: post.data.pubDate.toISOString(), dateModified: (post.data.updatedDate ?? post.data.pubDate).toISOString(), author: { "@type": "Person", name: author?.data.name }, publisher: { "@type": "Organization", name: site.name, logo: { "@type": "ImageObject", url: absUrl("/img/logo-mark.svg") } }, mainEntityOfPage: url },
+  { "@context": "https://schema.org", "@type": "BreadcrumbList", itemListElement: [ { "@type": "ListItem", position: 1, name: "Home", item: absUrl("/") }, { "@type": "ListItem", position: 2, name: "Journal", item: absUrl("/journal/") }, { "@type": "ListItem", position: 3, name: post.data.title, item: url } ] },
+];
+if (faqs.length) jsonLd.push({ "@context": "https://schema.org", "@type": "FAQPage", mainEntity: faqs.map((f) => ({ "@type": "Question", name: f.question, acceptedAnswer: { "@type": "Answer", text: f.answer } })) });
+---
+<Base title={post.data.title} description={post.data.description} image={post.data.cover} type="article" jsonLd={jsonLd}>
+  <article>
+    <header class="band article-head"><div class="wrap narrow">
+      <nav aria-label="Breadcrumb" class="crumbs"><a href="/">Home</a> <span aria-hidden="true">/</span> <a href="/journal/">Journal</a> <span aria-hidden="true">/</span> <a href={`/journal/category/${slugify(post.data.category)}/`}>{post.data.category}</a></nav>
+      <h1>{post.data.title}</h1>
+      <p class="lead">{post.data.description}</p>
+      <p class="byline">By <a href="/team/">{author?.data.name}</a> &middot; <time datetime={post.data.pubDate.toISOString().slice(0, 10)}>{fmtDate(post.data.pubDate)}</time> &middot; {readingTime(post.body)} min read</p>
+    </div></header>
+    <div class="wrap narrow">
+      <figure class="article-cover"><img src={post.data.cover} alt={post.data.coverAlt} width="1200" height="800" fetchpriority="high"></figure>
+      <div class="prose"><Content /></div>
+      {faqs.length > 0 && (
+        <section class="faq" aria-labelledby="faq-heading">
+          <h2 id="faq-heading">Frequently asked questions</h2>
+          {faqs.map((f) => <details><summary>{f.question}</summary><p>{f.answer}</p></details>)}
+        </section>
+      )}
+      <aside class="author-card" aria-label="About the author">
+        <img src={author?.data.photo} alt="" width="96" height="96" loading="lazy">
+        <div><p class="tag">Written by</p><p class="author-name">{author?.data.name}</p><p class="notes">{author?.data.role}</p></div>
+      </aside>
+    </div>
+  </article>
+  {related.length > 0 && (
+    <section class="band"><div class="wrap">
+      <h2>More from {post.data.category}</h2>
+      <div class="grid-3">{related.map((p) => <PostCard href={`/journal/${p.id}/`} image={p.data.cover} kicker={p.data.category} title={p.data.title} date={p.data.pubDate} summary={p.data.description} />)}</div>
+    </div></section>
+  )}
+</Base>

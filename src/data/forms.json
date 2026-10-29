@@ -1,0 +1,21 @@
+{
+  "forms": [
+    {
+      "id": "contact",
+      "name": "Contact form",
+      "submitLabel": "Send message",
+      "fields": [
+        { "name": "name", "label": "Your name", "type": "text", "required": true, "autocomplete": "name" },
+        { "name": "email", "label": "Email address", "type": "email", "required": true, "autocomplete": "email" },
+        { "name": "topic", "label": "What can we help with?", "type": "select", "required": true, "options": ["Wholesale and cafes", "Subscriptions", "Events", "Something else"] },
+        { "name": "message", "label": "Message", "type": "textarea", "required": true }
+      ],
+      "success": { "type": "redirect", "redirect": "/thank-you/", "message": "Thanks, your message is on its way. We reply within one business day." },
+      "notify": { "enabled": true, "to": ["hello@example.com"], "subject": "New {{topic}} enquiry from {{name}}", "replyToField": "email" },
+      "autoresponder": { "enabled": false, "subject": "We got your message", "body": "Thanks for getting in touch with Tidewell Coffee. We will reply within one business day." },
+      "crm": { "provider": "none", "listId": "", "tags": ["website-contact"], "fieldMap": [{ "formField": "email", "crmField": "email" }, { "formField": "name", "crmField": "full_name" }] },
+      "webhook": { "url": "" },
+      "spam": { "honeypotField": "website", "minSecondsToSubmit": 3, "requireTurnstile": true }
+    }
+  ]
+}

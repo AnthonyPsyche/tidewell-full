@@ -1,0 +1,5 @@
+{
+  "allowRootAbsolute": true,
+  "allowedScriptHosts": ["challenges.cloudflare.com"],
+  "ignorePaths": ["admin/"]
+}

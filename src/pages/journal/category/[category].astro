@@ -1,0 +1,33 @@
+---
+import Base from "../../../layouts/Base.astro";
+import PostCard from "../../../components/PostCard.astro";
+import { getPosts, slugify } from "../../../lib/content";
+import { CATEGORIES } from "../../../content.config";
+
+export async function getStaticPaths() {
+  const posts = await getPosts();
+  return CATEGORIES.filter((c) => posts.some((p) => p.data.category === c)).map((c) => ({
+    params: { category: slugify(c) },
+    props: { category: c, posts: posts.filter((p) => p.data.category === c) },
+  }));
+}
+const { category, posts } = Astro.props;
+const blurbs = { Brewing: "How to get a better cup at home, whatever you brew with.", Roasting: "What happens in the roaster, and why it changes the cup.", Sourcing: "The farms and lots behind the coffee, and how we choose them." };
+---
+<Base title={`${category} posts`} description={`${blurbs[category]} Browse every Tidewell journal post about ${category.toLowerCase()}.`}>
+  <section class="band page-head"><div class="wrap">
+    <p class="eyebrow">Journal category</p>
+    <h1>{category}</h1>
+    <p class="lead">{blurbs[category]}</p>
+    <nav aria-label="Journal categories" class="chips">
+      <a class="chip" href="/journal/">All posts</a>
+      {CATEGORIES.map((c) => <a class="chip" href={`/journal/category/${slugify(c)}/`} aria-current={c === category ? "page" : undefined}>{c}</a>)}
+    </nav>
+  </div></section>
+  <section><div class="wrap">
+    <h2 class="sr-only">Posts in {category}</h2>
+    <div class="grid-3">
+      {posts.map((p) => <PostCard href={`/journal/${p.id}/`} image={p.data.cover} kicker={p.data.category} title={p.data.title} date={p.data.pubDate} summary={p.data.description} />)}
+    </div>
+  </div></section>
+</Base>
