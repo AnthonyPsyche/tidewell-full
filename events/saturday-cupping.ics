@@ -1,0 +1,16 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Tidewell Coffee//Events//EN
+CALSCALE:GREGORIAN
+X-WR-CALNAME:Tidewell Coffee events
+BEGIN:VEVENT
+UID:saturday-cupping@anthonypsyche.github.io
+DTSTAMP:20261030T000424Z
+DTSTART:20261114T100000
+DTEND:20261114T120000
+SUMMARY:Saturday cupping: Harbor Light vs Driftwood
+DESCRIPTION:Taste two roasts side by side with our head roaster and learn how to score coffee like a pro.
+LOCATION:The Tidewell roastery\, 12 Pier Road\, Port Alder\, WA
+URL:https://anthonypsyche.github.io/tidewell-full/events/saturday-cupping/
+END:VEVENT
+END:VCALENDAR

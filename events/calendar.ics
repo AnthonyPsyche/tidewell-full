@@ -1,0 +1,56 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Tidewell Coffee//Events//EN
+CALSCALE:GREGORIAN
+X-WR-CALNAME:Tidewell Coffee events
+BEGIN:VEVENT
+UID:harvest-tasting@anthonypsyche.github.io
+DTSTAMP:20261030T000424Z
+DTSTART:20261017T100000
+DTEND:20261017T120000
+SUMMARY:Harvest tasting: this year's new crop
+DESCRIPTION:Past event. Fresh arrivals from this year's harvest\, cupped side by side.
+LOCATION:The Tidewell roastery\, 12 Pier Road\, Port Alder\, WA
+URL:https://anthonypsyche.github.io/tidewell-full/events/harvest-tasting/
+END:VEVENT
+BEGIN:VEVENT
+UID:saturday-cupping@anthonypsyche.github.io
+DTSTAMP:20261030T000424Z
+DTSTART:20261114T100000
+DTEND:20261114T120000
+SUMMARY:Saturday cupping: Harbor Light vs Driftwood
+DESCRIPTION:Taste two roasts side by side with our head roaster and learn how to score coffee like a pro.
+LOCATION:The Tidewell roastery\, 12 Pier Road\, Port Alder\, WA
+URL:https://anthonypsyche.github.io/tidewell-full/events/saturday-cupping/
+END:VEVENT
+BEGIN:VEVENT
+UID:pour-over-basics-class@anthonypsyche.github.io
+DTSTAMP:20261030T000424Z
+DTSTART:20261121T140000
+DTEND:20261121T153000
+SUMMARY:Pour-over basics class
+DESCRIPTION:A hands-on class covering grind\, ratio and technique so you can brew a great pour-over at home.
+LOCATION:The Tidewell roastery\, 12 Pier Road\, Port Alder\, WA
+URL:https://anthonypsyche.github.io/tidewell-full/events/pour-over-basics-class/
+END:VEVENT
+BEGIN:VEVENT
+UID:holiday-blend-tasting@anthonypsyche.github.io
+DTSTAMP:20261030T000424Z
+DTSTART:20261205T110000
+DTEND:20261205T130000
+SUMMARY:Holiday blend tasting
+DESCRIPTION:Be first to taste this year's holiday blend and pick up gift bags for the season.
+LOCATION:The Tidewell roastery\, 12 Pier Road\, Port Alder\, WA
+URL:https://anthonypsyche.github.io/tidewell-full/events/holiday-blend-tasting/
+END:VEVENT
+BEGIN:VEVENT
+UID:home-espresso-workshop@anthonypsyche.github.io
+DTSTAMP:20261030T000424Z
+DTSTART:20261219T100000
+DTEND:20261219T120000
+SUMMARY:Home espresso workshop
+DESCRIPTION:Dial in your home espresso machine: dosing\, grind\, extraction and milk\, with one-on-one help.
+LOCATION:The Tidewell roastery\, 12 Pier Road\, Port Alder\, WA
+URL:https://anthonypsyche.github.io/tidewell-full/events/home-espresso-workshop/
+END:VEVENT
+END:VCALENDAR

@@ -1,0 +1,16 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Tidewell Coffee//Events//EN
+CALSCALE:GREGORIAN
+X-WR-CALNAME:Tidewell Coffee events
+BEGIN:VEVENT
+UID:holiday-blend-tasting@anthonypsyche.github.io
+DTSTAMP:20261030T000424Z
+DTSTART:20261205T110000
+DTEND:20261205T130000
+SUMMARY:Holiday blend tasting
+DESCRIPTION:Be first to taste this year's holiday blend and pick up gift bags for the season.
+LOCATION:The Tidewell roastery\, 12 Pier Road\, Port Alder\, WA
+URL:https://anthonypsyche.github.io/tidewell-full/events/holiday-blend-tasting/
+END:VEVENT
+END:VCALENDAR

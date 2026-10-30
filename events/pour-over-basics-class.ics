@@ -1,0 +1,16 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Tidewell Coffee//Events//EN
+CALSCALE:GREGORIAN
+X-WR-CALNAME:Tidewell Coffee events
+BEGIN:VEVENT
+UID:pour-over-basics-class@anthonypsyche.github.io
+DTSTAMP:20261030T000424Z
+DTSTART:20261121T140000
+DTEND:20261121T153000
+SUMMARY:Pour-over basics class
+DESCRIPTION:A hands-on class covering grind\, ratio and technique so you can brew a great pour-over at home.
+LOCATION:The Tidewell roastery\, 12 Pier Road\, Port Alder\, WA
+URL:https://anthonypsyche.github.io/tidewell-full/events/pour-over-basics-class/
+END:VEVENT
+END:VCALENDAR

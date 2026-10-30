@@ -1,0 +1,16 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Tidewell Coffee//Events//EN
+CALSCALE:GREGORIAN
+X-WR-CALNAME:Tidewell Coffee events
+BEGIN:VEVENT
+UID:harvest-tasting@anthonypsyche.github.io
+DTSTAMP:20261030T000424Z
+DTSTART:20261017T100000
+DTEND:20261017T120000
+SUMMARY:Harvest tasting: this year's new crop
+DESCRIPTION:Past event. Fresh arrivals from this year's harvest\, cupped side by side.
+LOCATION:The Tidewell roastery\, 12 Pier Road\, Port Alder\, WA
+URL:https://anthonypsyche.github.io/tidewell-full/events/harvest-tasting/
+END:VEVENT
+END:VCALENDAR

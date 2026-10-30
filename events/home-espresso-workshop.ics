@@ -1,0 +1,16 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Tidewell Coffee//Events//EN
+CALSCALE:GREGORIAN
+X-WR-CALNAME:Tidewell Coffee events
+BEGIN:VEVENT
+UID:home-espresso-workshop@anthonypsyche.github.io
+DTSTAMP:20261030T000424Z
+DTSTART:20261219T100000
+DTEND:20261219T120000
+SUMMARY:Home espresso workshop
+DESCRIPTION:Dial in your home espresso machine: dosing\, grind\, extraction and milk\, with one-on-one help.
+LOCATION:The Tidewell roastery\, 12 Pier Road\, Port Alder\, WA
+URL:https://anthonypsyche.github.io/tidewell-full/events/home-espresso-workshop/
+END:VEVENT
+END:VCALENDAR
