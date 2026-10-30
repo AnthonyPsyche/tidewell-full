@@ -1,7 +1,7 @@
 ---
 title: title in here
 description: hey it's the meta ddescirptionserggrgrtgertgerttreqtertewrtwertwertwertwertwer
-pubDate: 2026-10-29
+pubDate: 2026-10-27
 category: Brewing
 author: iris-okafor
 cover: /uploads/beans.jpg
