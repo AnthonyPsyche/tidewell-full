@@ -2,7 +2,7 @@
 title: "How to brew better pour-over at home"
 description: "A simple, repeatable pour-over recipe: the ratio, grind, water temperature and pour timing that turn good beans into a great cup, with no special gear."
 pubDate: 2026-10-22
-category: Brewing
+category: brewing
 author: jonah-reyes
 cover: /uploads/kettle.jpg
 coverAlt: "Pouring hot water from a gooseneck kettle over a pour-over brewer"

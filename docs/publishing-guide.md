@@ -8,12 +8,12 @@ This site does not use WordPress. Your posts are saved as simple files, and the 
 |---|---|
 | Dashboard / wp-admin | The **Content Manager** at `yoursite.com/admin/` |
 | Posts | **Journal posts** |
-| Categories | **Category** (pick one: Brewing, Roasting or Sourcing) |
+| Categories | **Category** (pick one; add new ones under **Categories**) |
 | Featured image | **Cover image** |
 | Yoast / SEO description | **Search description** |
 | Media Library | **Media** (top bar), or upload while you edit |
 | Draft, Pending review, Published | **Draft, In review, Ready, Published** |
-| Schedule a post | Choose a future **Publish date** (goes live on the next nightly rebuild) |
+| Schedule a post | Not supported: a post goes live as soon as you publish it. Keep it as a draft until you are ready. |
 | Revisions | Every save is kept in GitHub's history; ask us to restore an older version |
 | Pages, custom post types | **Case studies, Team, Events** in the left menu |
 
@@ -35,8 +35,10 @@ You will see the Content Manager. The left menu lists everything you can edit.
 
 - **Title**: the headline. Keep it under 70 characters so it is not cut off in Google.
 - **Search description**: one or two sentences that appear under your title in Google results. Between 50 and 170 characters. The editor will warn you if it is too short or long.
-- **Publish date**: today, or a future date to schedule the post.
-- **Category** and **Author**: choose from the lists.
+- **Date shown on the post**: the date readers see under the title, also used to sort posts. It does not delay publishing.
+- **Category** and **Author**: choose from the lists. Not in the list?
+  - **New category:** click **Quick add** (top bar), choose **Categories**, fill in a name and a one-sentence description, and publish it. Then return to your post and pick it.
+  - **New author:** click **Quick add**, choose **Team and authors**, add the person's name, role, photo and bio. Switch off **Show on the Team page** if they are a guest writer who should not be listed on the Team page.
 - **Cover image**: click **Choose an image**, then **Upload** a landscape photo (about 1200 x 800 pixels), or pick one you uploaded before.
 - **Cover image description**: describe the photo in a short sentence. This is read aloud to people who use screen readers and helps in image search.
 
@@ -86,7 +88,7 @@ After you publish, **wait one to two minutes**: the site is rebuilt and then you
 
 ## Good to know
 
-- **Scheduled posts** go live on the next nightly rebuild after their publish date, so allow up to a day.
+- **Publishing is immediate**, not scheduled: once you publish, the post is live after the one-to-two-minute rebuild, whatever date you chose.
 - **Images** should be reasonably small (under 500 KB). Large camera photos slow your site down; resize them first.
 - **If something looks wrong** after publishing, do not worry: nothing is lost. Hide the post and tell us, and we can roll back to the previous version.
 - **Need a hand?** Email us with the link to the post and a screenshot.

@@ -7,7 +7,15 @@ const faq = z.object({ question: z.string(), answer: z.string() });
 // YAML may hand back a Date for timestamp-like values; keep the venue wall-clock string either way
 const wallTime = z.union([z.string(), z.date()]).transform((v) => (v instanceof Date ? v.toISOString().slice(0, 16) : v));
 
-export const CATEGORIES = ["Brewing", "Roasting", "Sourcing"] as const;
+// Categories are content too: add one in the CMS (Categories) and it appears in the post dropdown and on the site.
+const categories = defineCollection({
+  loader: glob({ pattern: "**/*.md", base: "./src/content/categories" }),
+  schema: z.object({
+    name: z.string().max(40),
+    description: z.string().min(20).max(170),
+    order: z.number().default(100),
+  }),
+});
 
 const blog = defineCollection({
   loader: glob({ pattern: "**/*.md", base: "./src/content/blog" }),
@@ -16,7 +24,7 @@ const blog = defineCollection({
     description: z.string().min(50).max(170),
     pubDate: z.coerce.date(),
     updatedDate: z.coerce.date().optional(),
-    category: z.enum(CATEGORIES),
+    category: reference("categories"),
     author: reference("team"),
     cover: z.string(),
     coverAlt: z.string(),
@@ -48,6 +56,8 @@ const team = defineCollection({
     photo: z.string(),
     photoAlt: z.string(),
     order: z.number().default(100),
+    // Switch off for guest authors who should be credited on their posts but not listed on the Team page
+    showOnTeamPage: z.boolean().default(true),
     draft: z.boolean().default(false),
   }),
 });
@@ -68,4 +78,4 @@ const events = defineCollection({
   }),
 });
 
-export const collections = { blog, "case-studies": caseStudies, team, events };
+export const collections = { blog, categories, "case-studies": caseStudies, team, events };

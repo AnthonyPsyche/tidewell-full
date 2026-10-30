@@ -1,10 +1,11 @@
 ---
 import Base from "../../layouts/Base.astro";
 import PostCard from "../../components/PostCard.astro";
-import { getPosts, slugify } from "../../lib/content";
-import { CATEGORIES } from "../../content.config";
+import { getPosts, getCategories } from "../../lib/content";
 const posts = await getPosts();
-const counts = Object.fromEntries(CATEGORIES.map((c) => [c, posts.filter((p) => p.data.category === c).length]));
+const cats = await getCategories();
+const catName = new Map(cats.map((c) => [c.id, c.data.name]));
+const withPosts = cats.map((c) => ({ c, count: posts.filter((p) => p.data.category.id === c.id).length })).filter((x) => x.count > 0);
 ---
 <Base title="Journal" description="Brewing guides, roasting notes and stories from the coast: practical coffee knowledge from the Tidewell roastery.">
   <section class="band page-head"><div class="wrap">
@@ -13,13 +14,13 @@ const counts = Object.fromEntries(CATEGORIES.map((c) => [c, posts.filter((p) => 
     <p class="lead">Brewing guides, roasting notes and stories from the roastery.</p>
     <nav aria-label="Journal categories" class="chips">
       <a class="chip" href="/journal/" aria-current="page">All posts</a>
-      {CATEGORIES.filter((c) => counts[c]).map((c) => <a class="chip" href={`/journal/category/${slugify(c)}/`}>{c} <span class="count">{counts[c]}</span></a>)}
+      {withPosts.map(({ c, count }) => <a class="chip" href={`/journal/category/${c.id}/`}>{c.data.name} <span class="count">{count}</span></a>)}
     </nav>
   </div></section>
   <section><div class="wrap">
     <h2 class="sr-only">Latest posts</h2>
     <div class="grid-3">
-      {posts.map((p) => <PostCard href={`/journal/${p.id}/`} image={p.data.cover} kicker={p.data.category} title={p.data.title} date={p.data.pubDate} summary={p.data.description} />)}
+      {posts.map((p) => <PostCard href={`/journal/${p.id}/`} image={p.data.cover} kicker={catName.get(p.data.category.id)} title={p.data.title} date={p.data.pubDate} summary={p.data.description} />)}
     </div>
   </div></section>
 </Base>

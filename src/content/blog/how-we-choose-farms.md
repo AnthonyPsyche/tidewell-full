@@ -2,7 +2,7 @@
 title: "How we choose the farms we buy from"
 description: "How our buyer picks farms and lots: the cupping scores, relationships and traceability that decide which coffees make it into a Tidewell bag."
 pubDate: 2026-10-08
-category: Sourcing
+category: sourcing
 author: theo-park
 cover: /uploads/beans.jpg
 coverAlt: "Close-up of freshly roasted coffee beans"

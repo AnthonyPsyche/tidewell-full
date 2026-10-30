@@ -2,8 +2,9 @@
 import Base from "../layouts/Base.astro";
 import PostCard from "../components/PostCard.astro";
 import site from "../data/site.json";
-import { getPosts, getEvents, isUpcoming, fmtEventDate, fmtEventTime, ymd } from "../lib/content";
+import { getPosts, getCategoryNames, getEvents, isUpcoming, fmtEventDate, fmtEventTime, ymd } from "../lib/content";
 const posts = await getPosts();
+const catName = await getCategoryNames();
 const upcoming = (await getEvents()).filter(isUpcoming);
 ---
 <Base title={site.name} description="Single-origin coffee roasted twice a week on the coast and shipped within a day. Explore the journal, meet the team and join a tasting.">
@@ -100,7 +101,7 @@ const upcoming = (await getEvents()).filter(isUpcoming);
       <h2>Fresh reading</h2>
     </div>
     <div class="grid-3">
-      {posts.slice(0, 3).map((p) => <PostCard href={`/journal/${p.id}/`} image={p.data.cover} kicker={p.data.category} title={p.data.title} date={p.data.pubDate} summary={p.data.description} />)}
+      {posts.slice(0, 3).map((p) => <PostCard href={`/journal/${p.id}/`} image={p.data.cover} kicker={catName.get(p.data.category.id)} title={p.data.title} date={p.data.pubDate} summary={p.data.description} />)}
     </div>
     <p class="more"><a class="btn btn-secondary" href="/journal/">All journal posts</a></p>
   </div>

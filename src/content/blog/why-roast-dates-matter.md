@@ -2,7 +2,7 @@
 title: "Why freshness matters: the case for roast dates"
 description: "Why a roast date beats a best-before date, how long coffee stays at its best, and how to store beans so you get the most from every bag."
 pubDate: 2026-09-30
-category: Roasting
+category: roasting
 author: mara-ellison
 cover: /uploads/pourover.jpg
 coverAlt: "A Chemex brewer with fresh coffee"

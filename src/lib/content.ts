@@ -1,21 +1,26 @@
 import { getCollection, type CollectionEntry } from "astro:content";
 import site from "../data/site.json";
 
-const now = () => new Date();
-
-/** Published = not a draft and its date has arrived (future-dated posts appear on the first rebuild after their date). */
+/** Published = not a draft. A post goes live the moment the CMS publishes it; its date is only what the page displays and how posts are sorted. */
 export async function getPosts() {
-  const posts = await getCollection("blog", (p) => !p.data.draft && p.data.pubDate <= now());
+  const posts = await getCollection("blog", (p) => !p.data.draft);
   return posts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 }
 export async function getCaseStudies() {
-  const items = await getCollection("case-studies", (p) => !p.data.draft && p.data.date <= now());
+  const items = await getCollection("case-studies", (p) => !p.data.draft);
   return items.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 }
 export async function getTeam() {
-  const members = await getCollection("team", (m) => !m.data.draft);
+  const members = await getCollection("team", (m) => !m.data.draft && m.data.showOnTeamPage);
   return members.sort((a, b) => a.data.order - b.data.order || a.data.name.localeCompare(b.data.name));
 }
+
+export async function getCategories() {
+  const cats = await getCollection("categories");
+  return cats.sort((a, b) => a.data.order - b.data.order || a.data.name.localeCompare(b.data.name));
+}
+/** id -> display name, for labelling posts */
+export async function getCategoryNames() { return new Map((await getCategories()).map((c) => [c.id, c.data.name])); }
 
 export const slugify = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
 export const fmtDate = (d: Date) => d.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric", timeZone: "UTC" });

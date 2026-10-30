@@ -36,18 +36,14 @@ collections:
     extension: md
     format: frontmatter
     slug: "{{slug}}"
-    summary: "{{title}} ({{category}}, {{pubDate}})"
-    sortable_fields: [pubDate, title, category]
-    view_filters:
-      - { label: Brewing, field: category, pattern: Brewing }
-      - { label: Roasting, field: category, pattern: Roasting }
-      - { label: Sourcing, field: category, pattern: Sourcing }
+    summary: "{{title}} ({{pubDate}})"
+    sortable_fields: [pubDate, title]
     fields:
       - { label: Title, name: title, widget: string, hint: "The headline. Keep it under 70 characters.", pattern: ['^.{1,70}$', "Use 70 characters or fewer"] }
       - { label: Search description, name: description, widget: text, hint: "Shown under the title in Google results and when shared. 50 to 170 characters.", pattern: ['^[\s\S]{50,170}$', "Use between 50 and 170 characters"] }
-      - { label: Publish date, name: pubDate, widget: datetime, date_format: "YYYY-MM-DD", time_format: false, format: "YYYY-MM-DD", picker_utc: false, hint: "Posts dated in the future go live automatically after the nightly rebuild." }
-      - { label: Category, name: category, widget: select, options: [Brewing, Roasting, Sourcing] }
-      - { label: Author, name: author, widget: relation, collection: team, search_fields: [name], value_field: "{{slug}}", display_fields: [name] }
+      - { label: Date shown on the post, name: pubDate, widget: datetime, date_format: "YYYY-MM-DD", time_format: false, format: "YYYY-MM-DD", picker_utc: false, hint: "Shown under the title and used to sort posts. The post goes live as soon as you publish it, whatever this date is." }
+      - { label: Category, name: category, widget: relation, collection: categories, search_fields: [name], value_field: "{{slug}}", display_fields: [name], hint: "Need a new category? Click Quick add (top bar), choose Categories, save it, then come back and pick it here." }
+      - { label: Author, name: author, widget: relation, collection: team, search_fields: [name], value_field: "{{slug}}", display_fields: [name], hint: "New writer? Click Quick add, choose Team and authors, and switch off Show on the Team page if they are a guest author." }
       - { label: Cover image, name: cover, widget: image, hint: "Landscape photo, ideally 1200 x 800 pixels (3:2)." }
       - { label: Cover image description, name: coverAlt, widget: string, hint: "Describe the photo for people using screen readers." }
       - { label: Hide this post (draft), name: draft, widget: boolean, default: false, required: false }
@@ -61,6 +57,24 @@ collections:
           - { label: Question, name: question, widget: string }
           - { label: Answer, name: answer, widget: text }
       - { label: Body, name: body, widget: markdown, hint: "Use Heading 2 and Heading 3 for sections. The title is already the page's main heading." }
+
+  - name: categories
+    label: Categories
+    label_singular: Category
+    folder: src/content/categories
+    identifier_field: name   # file name comes from the category name
+    create: true
+    extension: md
+    format: frontmatter
+    slug: "{{slug}}"
+    summary: "{{order}}. {{name}}"
+    sortable_fields: [order, name]
+    editor:
+      preview: false
+    fields:
+      - { label: Name, name: name, widget: string, hint: "Shown on posts and as a filter button. Keep it short, such as Brewing." }
+      - { label: Description, name: description, widget: text, hint: "One sentence shown at the top of the category page. 20 to 170 characters.", pattern: ['^[\s\S]{20,170}$', "Use between 20 and 170 characters"] }
+      - { label: Display order, name: order, widget: number, value_type: int, min: 1, default: 100, hint: "1 appears first." }
 
   - name: case_studies
     editor:
@@ -95,9 +109,10 @@ collections:
   - name: team
     editor:
       preview: false
-    label: Team
-    label_singular: Team member
+    label: Team and authors
+    label_singular: Team member or author
     folder: src/content/team
+    identifier_field: name   # file name comes from the person's name
     create: true
     extension: md
     format: frontmatter
@@ -110,6 +125,7 @@ collections:
       - { label: Photo, name: photo, widget: image, hint: "Square headshot, at least 400 x 400 pixels." }
       - { label: Photo description, name: photoAlt, widget: string, hint: "For example: Portrait of Mara smiling in the roastery." }
       - { label: Display order, name: order, widget: number, value_type: int, min: 1, default: 100, hint: "1 appears first. Change the numbers to reorder the page." }
+      - { label: Show on the Team page, name: showOnTeamPage, widget: boolean, default: true, hint: "Switch off for guest authors who should be credited on their posts but not listed on the Team page." }
       - { label: Hide this person (draft), name: draft, widget: boolean, default: false, required: false }
       - { label: Bio, name: body, widget: markdown, buttons: [bold, italic, link], editor_components: [] }
 

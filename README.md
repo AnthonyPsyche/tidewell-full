@@ -17,7 +17,7 @@ A complete static site (Astro) with the functionality a WordPress site usually n
 | SEO | Per-page title/description/canonical/OG, JSON-LD (BlogPosting, FAQPage, BreadcrumbList, Event), sitemap on launch | `src/layouts/Base.astro`, `src/pages/journal/[slug].astro` |
 | Client how-to | Written guide with screenshots | `docs/publishing-guide.md` |
 
-Posts are published when `pubDate` has passed and `draft` is false; future-dated posts appear on the first rebuild after their date, and events move to "past" the same way. Set up a nightly rebuild (below) so this happens without anyone touching the site.
+Posts and case studies are live as soon as the CMS publishes them (`draft` is the only gate; `pubDate` is display and sort order only). Events move from "upcoming" to "past" when the site next rebuilds, so a nightly rebuild (below) is optional but keeps that list accurate on quiet days. Categories are a content collection (add one in the CMS and it appears in the post dropdown); guest authors live in Team with `showOnTeamPage` switched off.
 
 ## Run it locally
 
@@ -40,7 +40,7 @@ Quality gates: `npm run verify` builds, runs the structural check (links, headin
 1. Push this repo to GitHub. In Cloudflare: **Workers & Pages > Create > Pages > Connect to Git**, build command `npm run build`, output directory `dist`.
 2. **Turnstile**: create a widget in Cloudflare; add `PUBLIC_TURNSTILE_SITEKEY` (build variable) and `TURNSTILE_SECRET` (secret). Without them the always-pass test keys are used, which gives no spam protection.
 3. **CMS login**: create a GitHub OAuth App (callback `https://<site>/api/callback`); add `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` as secrets. Set `repo` and `base_url` in `public/admin/config.yml`. Invite the client's GitHub account to the repo.
-4. **Nightly rebuild** (scheduled posts, past events): create a Deploy Hook in Pages and call it daily from a scheduler (a GitHub Actions schedule, or any cron service).
+4. **Nightly rebuild** (optional: only keeps the events "upcoming/past" split current): create a Deploy Hook in Pages and call it daily from a scheduler (a GitHub Actions schedule, or any cron service). Nothing is scheduled by default.
 5. **Draft previews**: Pages builds every branch; the CMS's editorial workflow opens a pull request per draft, so each draft gets a preview URL.
 6. **At launch**: set `noindex` to false in `src/data/site.json` (or in the CMS under Settings), set the real `url`, and replace the placeholder emails.
 

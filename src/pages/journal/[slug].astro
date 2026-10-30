@@ -3,15 +3,16 @@ import { getEntry, render } from "astro:content";
 import Base from "../../layouts/Base.astro";
 import PostCard from "../../components/PostCard.astro";
 import site from "../../data/site.json";
-import { getPosts, fmtDate, readingTime, slugify, absUrl } from "../../lib/content";
+import { getPosts, getCategoryNames, fmtDate, readingTime, absUrl } from "../../lib/content";
 
 export async function getStaticPaths() {
   const posts = await getPosts();
-  return posts.map((post) => ({ params: { slug: post.id }, props: { post, related: posts.filter((p) => p.id !== post.id && p.data.category === post.data.category).slice(0, 3) } }));
+  return posts.map((post) => ({ params: { slug: post.id }, props: { post, related: posts.filter((p) => p.id !== post.id && p.data.category.id === post.data.category.id).slice(0, 3) } }));
 }
 const { post, related } = Astro.props;
 const { Content } = await render(post);
 const author = await getEntry(post.data.author);
+const catName = (await getCategoryNames()).get(post.data.category.id);
 const url = absUrl(`/journal/${post.id}/`);
 const faqs = post.data.faqs;
 const jsonLd: object[] = [
@@ -23,10 +24,10 @@ if (faqs.length) jsonLd.push({ "@context": "https://schema.org", "@type": "FAQPa
 <Base title={post.data.title} description={post.data.description} image={post.data.cover} type="article" jsonLd={jsonLd}>
   <article>
     <header class="band article-head"><div class="wrap narrow">
-      <nav aria-label="Breadcrumb" class="crumbs"><a href="/">Home</a> <span aria-hidden="true">/</span> <a href="/journal/">Journal</a> <span aria-hidden="true">/</span> <a href={`/journal/category/${slugify(post.data.category)}/`}>{post.data.category}</a></nav>
+      <nav aria-label="Breadcrumb" class="crumbs"><a href="/">Home</a> <span aria-hidden="true">/</span> <a href="/journal/">Journal</a> <span aria-hidden="true">/</span> <a href={`/journal/category/${post.data.category.id}/`}>{catName}</a></nav>
       <h1>{post.data.title}</h1>
       <p class="lead">{post.data.description}</p>
-      <p class="byline">By <a href="/team/">{author?.data.name}</a> &middot; <time datetime={post.data.pubDate.toISOString().slice(0, 10)}>{fmtDate(post.data.pubDate)}</time> &middot; {readingTime(post.body)} min read</p>
+      <p class="byline">By {author?.data.showOnTeamPage ? <a href="/team/">{author?.data.name}</a> : author?.data.name} &middot; <time datetime={post.data.pubDate.toISOString().slice(0, 10)}>{fmtDate(post.data.pubDate)}</time> &middot; {readingTime(post.body)} min read</p>
     </div></header>
     <div class="wrap narrow">
       <figure class="article-cover"><img src={post.data.cover} alt={post.data.coverAlt} width="1200" height="800" fetchpriority="high"></figure>
@@ -45,8 +46,8 @@ if (faqs.length) jsonLd.push({ "@context": "https://schema.org", "@type": "FAQPa
   </article>
   {related.length > 0 && (
     <section class="band"><div class="wrap">
-      <h2>More from {post.data.category}</h2>
-      <div class="grid-3">{related.map((p) => <PostCard href={`/journal/${p.id}/`} image={p.data.cover} kicker={p.data.category} title={p.data.title} date={p.data.pubDate} summary={p.data.description} />)}</div>
+      <h2>More from {catName}</h2>
+      <div class="grid-3">{related.map((p) => <PostCard href={`/journal/${p.id}/`} image={p.data.cover} kicker={catName} title={p.data.title} date={p.data.pubDate} summary={p.data.description} />)}</div>
     </div></section>
   )}
 </Base>

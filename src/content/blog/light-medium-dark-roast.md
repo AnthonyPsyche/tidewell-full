@@ -2,7 +2,7 @@
 title: "Light, medium or dark roast: what actually changes"
 description: "What really changes between light, medium and dark roasts: flavor, acidity, body and caffeine, and how to choose the right roast for the way you brew."
 pubDate: 2026-10-15
-category: Roasting
+category: roasting
 author: mara-ellison
 cover: /uploads/scoop.jpg
 coverAlt: "A roaster's hand checking freshly roasted beans in a cooling tray"

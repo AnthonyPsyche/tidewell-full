@@ -2,7 +2,7 @@
 title: "Grind size, explained"
 description: "Grind size is the fastest way to fix a cup that tastes sour or bitter. Learn what each grind does and the right setting for every brewer."
 pubDate: 2026-09-18
-category: Brewing
+category: brewing
 author: jonah-reyes
 cover: /uploads/beans.jpg
 coverAlt: "Close-up of coffee beans ready for grinding"
