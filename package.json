@@ -10,6 +10,7 @@
     "check": "node tools/check.mjs",
     "a11y": "node tools/a11y.mjs",
     "shots": "node tools/shots.mjs",
+    "deploy:pages": "node tools/deploy-pages.mjs",
     "verify": "npm run build && node tools/check.mjs && node tools/a11y.mjs"
   },
   "dependencies": {

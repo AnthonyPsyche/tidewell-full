@@ -4,13 +4,14 @@
 import fs from "node:fs";
 import path from "node:path";
 
-const dist = path.resolve(path.dirname(new URL(import.meta.url).pathname), "..", "dist");
+const dist = process.env.DIST ? path.resolve(process.env.DIST) : path.resolve(path.dirname(new URL(import.meta.url).pathname), "..", "dist");
 const walk = (d) => fs.readdirSync(d, { withFileTypes: true }).flatMap((e) => e.isDirectory() ? walk(path.join(d, e.name)) : [path.join(d, e.name)]);
 const TRACKERS = /googletagmanager|google-analytics|gtag\(|fbq\(|connect\.facebook|hotjar|clarity\.ms|hs-scripts|doubleclick|segment\.com|mixpanel|plausible|datafa\.st|recaptcha|cookieyes/i;
 const HEADING_EXEMPT = new Set(['branding/index.html']); // the Branding page is a type specimen (H1-H5 shown in a row), so it is not held to SEO heading structure
 const titles = new Map();
 const cfgPath = path.resolve(dist, "..", "check.config.json");
 const cfg = { allowRootAbsolute: false, allowedScriptHosts: [], ignorePaths: [], ...(fs.existsSync(cfgPath) ? JSON.parse(fs.readFileSync(cfgPath, "utf8")) : {}) };
+if (process.env.ALLOW_ROOT_ABSOLUTE === "0") cfg.allowRootAbsolute = false; // strict mode: used to verify sub-path hosting
 const problems = [];
 const add = (file, msg) => problems.push(`${path.relative(dist, file)}: ${msg}`);
 

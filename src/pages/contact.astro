@@ -2,6 +2,7 @@
 import Base from "../layouts/Base.astro";
 import formsConfig from "../data/forms.json";
 const form = formsConfig.forms.find((f) => f.id === "contact")!;
+const preview = !!import.meta.env.PUBLIC_PREVIEW; // static preview hosting (no form backend)
 const siteKey = import.meta.env.PUBLIC_TURNSTILE_SITEKEY ?? "1x00000000000000000000AA"; // Cloudflare's always-pass test key
 ---
 <Base title="Contact" description="Ask about wholesale, subscriptions or events. Send Tidewell Coffee a message and we reply within one business day.">
@@ -13,6 +14,7 @@ const siteKey = import.meta.env.PUBLIC_TURNSTILE_SITEKEY ?? "1x00000000000000000
   <section><div class="wrap narrow">
     <h2 class="sr-only">Contact form</h2>
     <form class="form" method="post" action={`/api/forms/${form.id}`} data-form={form.id} novalidate>
+      {preview && <p class="notice" role="note"><strong>Preview only.</strong> The contact form is not connected on this preview site yet, so it cannot send messages.</p>}
       <p class="form-note">Fields marked <span aria-hidden="true">*</span><span class="sr-only">with an asterisk</span> are required.</p>
       {form.fields.map((f) => (
         <div class="field">
@@ -25,12 +27,12 @@ const siteKey = import.meta.env.PUBLIC_TURNSTILE_SITEKEY ?? "1x00000000000000000
       ))}
       <div class="hp" aria-hidden="true"><label for="f-hp">Leave this field empty</label><input id="f-hp" name={form.spam.honeypotField} type="text" tabindex="-1" autocomplete="off"></div>
       <input type="hidden" name="_ts" value="">
-      {form.spam.requireTurnstile && <div class="cf-turnstile" data-sitekey={siteKey}></div>}
-      <button class="btn" type="submit">{form.submitLabel}</button>
+      {form.spam.requireTurnstile && !preview && <div class="cf-turnstile" data-sitekey={siteKey}></div>}
+      <button class="btn" type="submit" disabled={preview}>{form.submitLabel}</button>
       <p class="form-status" role="status" aria-live="polite" hidden></p>
     </form>
     <p class="notes">Prefer email? Write to <a href="mailto:hello@example.com">hello@example.com</a> (demo address).</p>
   </div></section>
-  <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+  {!preview && <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>}
   <script src="/js/forms.js" defer></script>
 </Base>

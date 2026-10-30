@@ -20,7 +20,8 @@ export async function getTeam() {
 export const slugify = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
 export const fmtDate = (d: Date) => d.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric", timeZone: "UTC" });
 export const readingTime = (body = "") => Math.max(1, Math.round(body.split(/\s+/).filter(Boolean).length / 220));
-export const absUrl = (path: string) => new URL(path, site.url).toString();
+const SITE_URL = (import.meta.env.PUBLIC_SITE_URL ?? site.url).replace(/\/$/, "");
+export const absUrl = (path: string) => SITE_URL + path; // plain concatenation so a hosting sub-path (GitHub Pages /repo/) is kept
 
 /* ---- Events: start/end are wall-clock strings at the venue ("2026-11-14T10:00") ---- */
 export type EventEntry = CollectionEntry<"events">;
@@ -58,7 +59,7 @@ const esc = (s = "") => s.replace(/\\/g, "\\\\").replace(/;/g, "\;").replace(/,/
 const icsStamp = (s: string) => s.replace(/[-:]/g, "").slice(0, 15).padEnd(15, "0");
 export function icsEvent(e: EventEntry) {
   const end = e.data.end ?? e.data.start;
-  return ["BEGIN:VEVENT", `UID:${e.id}@${new URL(site.url).hostname}`, `DTSTAMP:${new Date().toISOString().replace(/[-:]/g, "").slice(0, 15)}Z`,
+  return ["BEGIN:VEVENT", `UID:${e.id}@${new URL(SITE_URL).hostname}`, `DTSTAMP:${new Date().toISOString().replace(/[-:]/g, "").slice(0, 15)}Z`,
     `DTSTART:${icsStamp(e.data.start)}`, `DTEND:${icsStamp(end)}`, `SUMMARY:${esc(e.data.title)}`, `DESCRIPTION:${esc(e.data.description)}`,
     `LOCATION:${esc([e.data.location, e.data.address].filter(Boolean).join(", "))}`, `URL:${absUrl(`/events/${e.id}/`)}`, "END:VEVENT"].join("\r\n");
 }
